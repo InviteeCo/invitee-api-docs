@@ -1,37 +1,43 @@
-## Welcome to GitHub Pages
+## Setting up webhooks
 
-You can use the [editor on GitHub](https://github.com/InviteeCo/invitee-api-docs/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Webhooks are in place to let you know when a referral has been completed. The webhook will contain information about the referrer, referee & what reward, if any, is owed.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+You can setup a new webhook configuration at: https://app.invitee.co/account/webhooks
 
-### Markdown
+The webhook request will contain a secret key in the header, which is generated when going through setup in the web dashboard. This is used to ensure that the request is coming from Invitee.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+You must return a 200 response in your webhook handler. If a non 200 response is receieved, the request will be retried, with exponential back off of up to 5 minutes.
+
+The request you receive will contain the following information:
+
+POST <Your Webhook URL>
+
+Headers {
+	  "x-webhook-secret-key": String
+}
+
+Body {
+    "referrerCustomerId": String,
+    "refereeCustomerId": String,
+    "rewardType": String? (MONEY, PERCENTAGE, CREDIT),
+    "referrerRewardAmount": Decimal?
+    "refereeRewardAmount": Decimal?
+}
+
+## Tracking referral steps
+
+In order for Invitee to process referrals, you need to let us know when key 'steps' have been completed. These steps are configured when you setup a campaign & are used to indicate a completed referral. Eg. Sign up + make purchase = referral reward.
+  
+There are two ways to track these steps, either via our REST api or through the SDK itself. If you choose to use the REST api then the following can be used as a reference for tracking.
 
 ```markdown
-Syntax highlighted code block
+POST https://api.invitee.co/referral/referee/step
+x-api-key: <YOUR API KEY>
+Content-Type: application/json
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+Body {
+    "customerId": String,
+    "phoneNumber": String,
+    "step": String
+}
 ```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/InviteeCo/invitee-api-docs/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
