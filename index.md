@@ -14,7 +14,7 @@ The request you receive will contain the following information:
 POST <Your Webhook URL>
 
 Headers {
-	  "x-webhook-secret-key": String
+    "x-webhook-secret-key": String
 }
 
 Body {
