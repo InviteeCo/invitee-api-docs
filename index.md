@@ -10,6 +10,7 @@ You must return a 200 response in your webhook handler. If a non 200 response is
 
 The request you receive will contain the following information:
 
+```markdown
 POST <Your Webhook URL>
 
 Headers {
@@ -23,6 +24,7 @@ Body {
     "referrerRewardAmount": Decimal?
     "refereeRewardAmount": Decimal?
 }
+```
 
 ## Tracking referral steps
 
